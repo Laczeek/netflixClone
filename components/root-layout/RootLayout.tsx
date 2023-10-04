@@ -1,3 +1,4 @@
+import Footer from './Footer';
 import Navigation from './Navigation';
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -5,6 +6,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 		<>
 			<Navigation />
 			{children}
+			<Footer />
 		</>
 	);
 };

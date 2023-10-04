@@ -25,7 +25,7 @@ const Navigation = () => {
 	}, []);
 
 	return (
-		<header className='fixed w-full z-50'>
+		<header className='fixed w-full z-[9999]'>
 			<nav className={`${isTop ? 'bg-transparent' : 'bg-black'} transition-colors duration-300`}>
 				<div className='container flex justify-between items-center mx-auto p-6 h-[72px]'>
 					<div className='flex'>
