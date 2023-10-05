@@ -13,11 +13,11 @@ const DUMMY_MOVIE = {
 	youtubeURL: 'https://www.youtube.com/watch?v=Ades3pQbeh8',
 };
 
-export default function HomePage() {
+export default function MoviesPage() {
 	return (
 		<section>
 			<VideoBanner movie={DUMMY_MOVIE} />
-			<div className='mt-10 lg:-mt-40 container mx-auto px-6'>
+			<div className='mt-10 lg:-mt-40 container mx-auto px-4'>
 				{DUMMY_MOVIES.map(movies => (
 					<MoviesContainer movies={movies.movies} genre={movies.genre} />
 				))}

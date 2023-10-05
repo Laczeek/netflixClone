@@ -35,7 +35,7 @@ const MoviesContainer = ({ movies, genre }: { movies: MovieType[]; genre: string
 	};
 
 	return (
-		<div className='relative px-6  mb-10'>
+		<div className='relative   mb-10 '>
 			<h2 className='text-xl font-bold mb-2'>
 				{<span className='text-netflix-red'>{genreTitle[0]} </span>}
 				{genreTitle[1]}

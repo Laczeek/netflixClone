@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 import netlixLogo from '/public/assets/images/netflix-logo.svg';
-import AvatarButton from './AvatarDropdown';
+import AvatarDropdown from './AvatarDropdown';
 import BarsDropdown from './BarsDropdown';
+import GenreDropdown from './GenreDropdown';
 
 const Navigation = () => {
 	const [isTop, setIsTop] = useState(true);
@@ -33,20 +34,18 @@ const Navigation = () => {
 							<Image src={netlixLogo} alt='netlix logo' width={90} height={30} />
 						</Link>
 						<ul className='hidden md:flex ml-6'>
-							<li className='w-full'>
-								<Link href={'/'} className='block px-6 py-2 hover:text-gray-300 transition-colors duration-300'>
+							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
+								<Link href={'/movies'} className='block px-6 py-2 '>
 									Movies
 								</Link>
 							</li>
-							<li className='w-full'>
-								<Link href={'/'} className='block px-6 py-2 hover:text-gray-300 transition-colors duration-300'>
-									Serials
+							<li className='w-full over:text-gray-300 transition-colors duration-300'>
+								<Link href={'/series'} className='block px-6 py-2 h'>
+									Series
 								</Link>
 							</li>
-							<li className='w-full'>
-								<Link href={'/'} className='block px-6 py-2 hover:text-gray-300 transition-colors duration-300'>
-									Genres
-								</Link>
+							<li className='w-full over:text-gray-300 transition-colors duration-300'>
+								<GenreDropdown />
 							</li>
 						</ul>
 					</div>
@@ -57,7 +56,7 @@ const Navigation = () => {
 						<button>
 							<MagnifyingGlassIcon className='w-10 h-10' />
 						</button>
-						<AvatarButton />
+						<AvatarDropdown />
 					</div>
 				</div>
 			</nav>

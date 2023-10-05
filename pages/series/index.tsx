@@ -1,6 +1,6 @@
-import { DUMMY_MOVIES } from '@/dummy-data';
-import VideoBanner from '@/components/video-banner/VideoBanner';
-import MoviesContainer from '@/components/movies/MoviesContainer';
+import VideoBanner from "@/components/video-banner/VideoBanner";
+import MoviesContainer from "@/components/movies/MoviesContainer";
+import { DUMMY_MOVIES } from "@/dummy-data";
 
 const DUMMY_MOVIE = {
 	id: 'm1',
@@ -13,15 +13,17 @@ const DUMMY_MOVIE = {
 	youtubeURL: 'https://www.youtube.com/watch?v=Ades3pQbeh8',
 };
 
-export default function HomePage() {
-	return (
-		<section>
-			<VideoBanner movie={DUMMY_MOVIE} />
-			<div className='mt-10 lg:-mt-40 container mx-auto px-6'>
+const SeriesPage = () => {
+    return <section>
+        <VideoBanner movie={DUMMY_MOVIE}/>
+
+        <div className='mt-10 lg:-mt-40 container mx-auto px-4'>
 				{DUMMY_MOVIES.map(movies => (
 					<MoviesContainer movies={movies.movies} genre={movies.genre} />
 				))}
 			</div>
-		</section>
-	);
+
+    </section>
 }
+
+export default SeriesPage;

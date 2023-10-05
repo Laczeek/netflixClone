@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<div className={`${roboto.variable} font-sans`}>
 			<RootLayout>
-				<main>
+				<main className='min-h-[100vh]'>
 					<Component {...pageProps} />
 				</main>
 			</RootLayout>
