@@ -7,6 +7,7 @@ export default function Document() {
 			<body className='bg-netflix-gray'>
 				<Main />
 				<NextScript />
+				<div id='modals'></div>
 			</body>
 		</Html>
 	);

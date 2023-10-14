@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Production {
+id String @id @default(auto()) @map("_id") @db.ObjectId
+title String
+description String
+slug String @unique
+image String
+youtubeURL String
+created_by String
+rating Int[]
+year_of_publication String
+length String
+allowed_age String
+
+type Type @relation(fields: [typeId], references: [id])
+typeId String @db.ObjectId
+
+genre_name GenreName 
+genre Genre @relation(fields: [genreId], references: [id])
+genreId String @db.ObjectId
+
+comments Comment[]
+}
+
+model Type {
+id String @id @default(auto()) @map("_id") @db.ObjectId
+name TypeName
+productions Production[]
+}
+
+
+model Genre {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name GenreName
+  productions Production[]
+}
+
+
+model User {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  username String @unique
+  password String
+  avatar_name String @default("avatar1")
+  queue String[] @default([])
+  comments Comment[]
+}
+
+
+model Comment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  text String
+  production_id String @db.ObjectId
+  production Production @relation(fields: [production_id], references: [id])
+  author_id String @db.ObjectId
+  author User @relation(fields: [author_id], references: [id])
+}
+
+
+enum TypeName {
+ MOVIE
+ SERIE
+}
+
+enum GenreName {
+  ACTION
+  ANIME
+  ADVENTURE
+  COMEDY
+  CRIME
+  HORROR
+  FAMILY
+  NEW
+}

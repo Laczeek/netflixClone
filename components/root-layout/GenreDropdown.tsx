@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 const GENRES = [
-	{ href: '/actions', text: 'Action' },
-	{ href: '/adventure', text: 'Adventure' },
-	{ href: '/anime', text: 'Anime' },
-	{ href: '/comedy', text: 'Comedy' },
-	{ href: '/crime', text: 'Crime' },
-	{ href: '/horror', text: 'Horror' },
-	{ href: '/family', text: 'Family' },
+	{ href: '/genres/action', text: 'Action' },
+	{ href: '/genres/adventure', text: 'Adventure' },
+	{ href: '/genres/anime', text: 'Anime' },
+	{ href: '/genres/comedy', text: 'Comedy' },
+	{ href: '/genres/crime', text: 'Crime' },
+	{ href: '/genres/horror', text: 'Horror' },
+	{ href: '/genres/family', text: 'Family' },
 ];
 
-const GenreDropdown = () => {
+const GenreDropdown = ({ closeBarsDropdown }: { closeBarsDropdown?: () => void }) => {
 	const [showDropdown, setShowDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +39,10 @@ const GenreDropdown = () => {
 				<ul className='py-3'>
 					{GENRES.map(genre => (
 						<li className='w-full' key={genre.text}>
-							<Link href={genre.href} className='block px-8 py-2 hover:bg-gray-hover transition-colors duration-300'>
+							<Link
+								href={genre.href}
+								className='block px-8 py-2 hover:bg-gray-hover transition-colors duration-300'
+								onClick={() => (closeBarsDropdown ? closeBarsDropdown() : setShowDropdown(false))}>
 								{genre.text}
 							</Link>
 						</li>

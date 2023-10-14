@@ -1,0 +1,67 @@
+import ProductionCardsGrid from '@/components/productions/ProductionCardsGrid';
+import { GenreName, PrismaClient, Production } from '@prisma/client';
+import { GetStaticProps } from 'next';
+import { ParsedUrlQuery } from 'querystring';
+
+interface IParams extends ParsedUrlQuery {
+	slug: string;
+}
+
+const GenresPage = ({ productions, genre }: { productions: Production[]; genre: string }) => {
+	return (
+		<section className='pt-[72px]'>
+			<h1 className='text-center capitalize text-xl my-10 font-bold'>
+				<span className='text-netflix-red'>{genre}</span> productions
+			</h1>
+			<ProductionCardsGrid productions={productions} />
+		</section>
+	);
+};
+
+export default GenresPage;
+
+export const getStaticPaths = async () => {
+	const prisma = new PrismaClient();
+	const allGenresNames = await prisma.genre.findMany({ select: { name: true } });
+
+	await prisma.$disconnect();
+
+	const paths = allGenresNames.map(genreName => ({ params: { slug: genreName.name.toLowerCase() } }));
+
+	return {
+		paths,
+		fallback: false,
+	};
+};
+
+export const getStaticProps: GetStaticProps = async context => {
+	const { slug } = context.params as IParams;
+
+	const prisma = new PrismaClient();
+
+	try {
+		const genre = await prisma.genre.findFirst({
+			where: { name: { equals: slug.toUpperCase() as GenreName } },
+			include: { productions: true },
+		});
+
+		if (!genre || genre.productions.length === 0) {
+			return {
+				notFound: true,
+			};
+		}
+
+		return {
+			props: {
+				productions: genre.productions,
+				genre: slug,
+			},
+			revalidate: 86400,
+		};
+	} catch (error: any) {
+		console.log(error);
+		throw new Error(`Failed to fetch ${slug} productions`);
+	} finally {
+		await prisma.$disconnect();
+	}
+};

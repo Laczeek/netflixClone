@@ -23,6 +23,7 @@ const config: Config = {
 				'netflix-red': '#db0000',
 				'netflix-gray': '#212121',
 				'netflix-gray-light': '#313030',
+				'netflix-gray-medium': '#181818',
 				'gray-hover': '#4b4949',
 			},
 		},

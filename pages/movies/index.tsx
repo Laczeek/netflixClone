@@ -1,27 +1,55 @@
-import { DUMMY_MOVIES } from '@/dummy-data';
+import { PrismaClient, Production } from '@prisma/client';
+
+import { GenresWithProductions } from '@/models/models';
 import VideoBanner from '@/components/video-banner/VideoBanner';
-import MoviesContainer from '@/components/movies/MoviesContainer';
+import ProductionsCardsContainer from '@/components/productions/ProductionCardsContainer';
 
-const DUMMY_MOVIE = {
-	id: 'm1',
-	title: 'One Piece',
-	description:
-		'Calling themselves the Straw Hats, Luffy and his gang sail from island to island in search of the mysterious One Piece treasure. Of course, no adventure is smooth sailing. On their quest, the Straw Hats run into dangerous rivals who stand in their way of hitting the jackpot.',
-	slug: 'one-piece',
-	image:
-		'https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2023/01/31/ce9f52f2-5bd4-49ca-9d71-28bc2e32878b_351db1ba.jpg',
-	youtubeURL: 'https://www.youtube.com/watch?v=Ades3pQbeh8',
-};
 
-export default function MoviesPage() {
+
+export default function MoviesPage({allGenres, newMovieForVideoBanner}: {allGenres: GenresWithProductions, newMovieForVideoBanner: Production}) {
 	return (
 		<section>
-			<VideoBanner movie={DUMMY_MOVIE} />
+			<VideoBanner production={newMovieForVideoBanner} />
 			<div className='mt-10 lg:-mt-40 container mx-auto px-4'>
-				{DUMMY_MOVIES.map(movies => (
-					<MoviesContainer movies={movies.movies} genre={movies.genre} />
-				))}
+				{allGenres.map(genre => <ProductionsCardsContainer key={genre.id} productions={genre.productions} genre={genre.name} type='MOVIE'/>)}
 			</div>
 		</section>
 	);
 }
+
+export const getStaticProps = async () => {
+	const prisma = new PrismaClient();
+	try {
+		const allMoviesGenres = await prisma.genre.findMany({
+			include: { productions: { where: { type: { name: 'MOVIE' } } } },
+		});
+
+		if (!allMoviesGenres || allMoviesGenres.length === 0) {
+			return {
+				notFound: true,
+			};
+		}
+
+		const newGenreMovies = allMoviesGenres.find(genre => genre.name === 'NEW')?.productions;
+		if(!newGenreMovies) {
+			return {
+				notFound: true,
+			};
+		}
+
+		const newMovieForVideoBanner = newGenreMovies[0];
+
+		return {
+			props: {
+				allGenres : allMoviesGenres,
+				newMovieForVideoBanner
+			}
+		}
+
+	} catch (error: any) {
+		console.log(error);
+		throw new Error('Failed to fetch movies data');
+	} finally {
+		await prisma.$disconnect();
+	}
+};

@@ -1,29 +1,63 @@
-import VideoBanner from "@/components/video-banner/VideoBanner";
-import MoviesContainer from "@/components/movies/MoviesContainer";
-import { DUMMY_MOVIES } from "@/dummy-data";
+import { PrismaClient, Production } from '@prisma/client';
 
-const DUMMY_MOVIE = {
-	id: 'm1',
-	title: 'One Piece',
-	description:
-		'Calling themselves the Straw Hats, Luffy and his gang sail from island to island in search of the mysterious One Piece treasure. Of course, no adventure is smooth sailing. On their quest, the Straw Hats run into dangerous rivals who stand in their way of hitting the jackpot.',
-	slug: 'one-piece',
-	image:
-		'https://cdn.i-scmp.com/sites/default/files/d8/images/canvas/2023/01/31/ce9f52f2-5bd4-49ca-9d71-28bc2e32878b_351db1ba.jpg',
-	youtubeURL: 'https://www.youtube.com/watch?v=Ades3pQbeh8',
-};
+import { GenresWithProductions } from '@/models/models';
+import VideoBanner from '@/components/video-banner/VideoBanner';
+import ProductionCardsContainer from '@/components/productions/ProductionCardsContainer';
 
-const SeriesPage = () => {
-    return <section>
-        <VideoBanner movie={DUMMY_MOVIE}/>
+const SeriesPage = ({
+	allGenres,
+	newSerieForVideoBanner,
+}: {
+	allGenres: GenresWithProductions;
+	newSerieForVideoBanner: Production;
+}) => {
+	return (
+		<section>
+			<VideoBanner production={newSerieForVideoBanner} />
 
-        <div className='mt-10 lg:-mt-40 container mx-auto px-4'>
-				{DUMMY_MOVIES.map(movies => (
-					<MoviesContainer movies={movies.movies} genre={movies.genre} />
+			<div className='mt-10 lg:-mt-40 container mx-auto px-4'>
+				{allGenres.map(genre => (
+					<ProductionCardsContainer key={genre.id} productions={genre.productions} genre={genre.name} type='SERIE' />
 				))}
 			</div>
-
-    </section>
-}
+		</section>
+	);
+};
 
 export default SeriesPage;
+
+export const getStaticProps = async () => {
+	const prisma = new PrismaClient();
+	try {
+		const allSeriesGenres = await prisma.genre.findMany({
+			include: { productions: { where: { type: { name: 'SERIE' } } } },
+		});
+
+		if (!allSeriesGenres || allSeriesGenres.length === 0) {
+			return {
+				notFound: true,
+			};
+		}
+
+		const newGenreSeries = allSeriesGenres.find(genre => genre.name === 'NEW')?.productions;
+		if (!newGenreSeries) {
+			return {
+				notFound: true,
+			};
+		}
+
+		const newSerieForVideoBanner = newGenreSeries[0];
+
+		return {
+			props: {
+				allGenres: allSeriesGenres,
+				newSerieForVideoBanner,
+			},
+		};
+	} catch (error: any) {
+		console.log(error);
+		throw new Error('Failed to fetch series data');
+	} finally {
+		await prisma.$disconnect();
+	}
+};

@@ -9,10 +9,14 @@ const BarsDropdown = () => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const handleClickOutside = (event: any) => {
-		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+		if ((dropdownRef.current && !dropdownRef.current.contains(event.target)) ) {
 			setShowDropdown(false);
 		}
 	};
+
+	const closeBarsDropdown = () => {
+		setShowDropdown(false);
+	}
 
 	useEffect(() => {
 		document.addEventListener('mousedown', handleClickOutside);
@@ -33,17 +37,17 @@ const BarsDropdown = () => {
 				  z-10 bg-netflix-gray-light rounded shadow-2xl `}>
 				<ul className='py-3'>
 					<li className='w-full hover:bg-gray-hover transition-colors duration-300'>
-						<Link href={'/movies'} className='block px-8 py-2 '>
+						<Link href={'/movies'} className='block px-8 py-2 ' onClick={closeBarsDropdown}>
 							Movies
 						</Link>
 					</li>
 					<li className='w-full hover:bg-gray-hover transition-colors duration-300'>
-						<Link href={'/series'} className='block px-8 py-2 '>
+						<Link href={'/series'} className='block px-8 py-2 ' onClick={closeBarsDropdown}>
 							Serials
 						</Link>
 					</li>
 					<li className='w-full hover:bg-gray-hover transition-colors duration-300'>
-						<GenreDropdown  />
+						<GenreDropdown closeBarsDropdown = {closeBarsDropdown}/>
 					</li>
 				</ul>
 			</div>

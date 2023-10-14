@@ -1,11 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
+import { deleteCookie } from 'cookies-next';
 
-import userAvatar from '/public/assets/images/user-default-avatar.png';
+import LoadingSpinner from '../ui/modals/LoadingSpinner';
+import { authActions } from '@/store/auth-slice';
+import { AppDispatch, RootState } from '@/store/store';
 
 const AvatarDropdown = () => {
 	const [showDropdown, setShowDropdown] = useState(false);
+	const dispatch: AppDispatch = useDispatch();
+	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
+
+	const router = useRouter();
 
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -13,6 +22,12 @@ const AvatarDropdown = () => {
 		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 			setShowDropdown(false);
 		}
+	};
+
+	const logoutHandler = () => {
+		deleteCookie('jwt');
+		dispatch(authActions.changeAuthStatus({ loading: false, data: null, error: null }));
+		router.replace('/auth');
 	};
 
 	useEffect(() => {
@@ -23,10 +38,20 @@ const AvatarDropdown = () => {
 		};
 	}, []);
 
+	if (authStatus.loading || !authStatus.data) {
+		return <LoadingSpinner />;
+	}
+
 	return (
 		<div className='relative text-left ' ref={dropdownRef}>
 			<button onClick={() => setShowDropdown(prevState => !prevState)} className='flex'>
-				<Image src={userAvatar} alt='default user avatar' width={35} height={35} className='rounded' />
+				<Image
+					src={`/assets/images/avatars/${authStatus.data?.avatarName}.png`}
+					alt='default user avatar'
+					width={35}
+					height={35}
+					className='rounded'
+				/>
 			</button>
 
 			<div
@@ -39,9 +64,11 @@ const AvatarDropdown = () => {
 						</Link>
 					</li>
 					<li className='w-full'>
-						<Link href={'/'} className='block px-6 py-2 hover:bg-gray-hover transition-colors duration-300'>
+						<button
+							className='block w-full px-6 py-2 hover:bg-gray-hover transition-colors duration-300'
+							onClick={logoutHandler}>
 							Logout
-						</Link>
+						</button>
 					</li>
 				</ul>
 			</div>

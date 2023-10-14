@@ -1,11 +1,17 @@
+import { GenreName, Production, TypeName } from '@prisma/client';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { MovieType } from '@/models/models';
-import Movie from './Movie';
+import ProductionCard from './ProductionCard';
 
-const MoviesContainer = ({ movies, genre }: { movies: MovieType[]; genre: string }) => {
-	const genreTitle = genre.split(' ');
-
+const ProductionCardsContainer = ({
+	productions,
+	genre,
+	type,
+}: {
+	productions: Production[];
+	genre: GenreName;
+	type: TypeName | 'PRODUCTION';
+}) => {
 	const responsive = {
 		ultraWideDesktop: {
 			breakpoint: { max: 3000, min: 1800 },
@@ -36,9 +42,9 @@ const MoviesContainer = ({ movies, genre }: { movies: MovieType[]; genre: string
 
 	return (
 		<div className='relative   mb-10 '>
-			<h2 className='text-xl font-bold mb-2'>
-				{<span className='text-netflix-red'>{genreTitle[0]} </span>}
-				{genreTitle[1]}
+			<h2 className='text-xl font-bold mb-2 capitalize'>
+				{<span className='text-netflix-red'>{genre.toLocaleLowerCase()} </span>}
+				{`${type.toLocaleLowerCase()}s`}
 			</h2>
 			<Carousel
 				responsive={responsive}
@@ -47,12 +53,12 @@ const MoviesContainer = ({ movies, genre }: { movies: MovieType[]; genre: string
 				infinite={true}
 				ssr={true}
 				partialVisible={false}>
-				{movies.map(movie => (
-					<Movie key={movie.id} {...movie} />
+				{productions.map(production => (
+					<ProductionCard key={production.id} production={production} />
 				))}
 			</Carousel>
 		</div>
 	);
 };
 
-export default MoviesContainer;
+export default ProductionCardsContainer;

@@ -1,8 +1,3 @@
-export interface MovieType {
-	id: string;
-	title: string
-	description: string;
-	slug: string
-	youtubeURL: string;
-    image: string
-}
+import { Genre, Production } from "@prisma/client";
+
+export type GenresWithProductions = (Genre & {productions: Production[]})[]

@@ -8,6 +8,7 @@ import AvatarDropdown from './AvatarDropdown';
 import BarsDropdown from './BarsDropdown';
 import GenreDropdown from './GenreDropdown';
 
+
 const Navigation = () => {
 	const [isTop, setIsTop] = useState(true);
 
@@ -39,12 +40,12 @@ const Navigation = () => {
 									Movies
 								</Link>
 							</li>
-							<li className='w-full over:text-gray-300 transition-colors duration-300'>
+							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
 								<Link href={'/series'} className='block px-6 py-2 h'>
 									Series
 								</Link>
 							</li>
-							<li className='w-full over:text-gray-300 transition-colors duration-300'>
+							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
 								<GenreDropdown />
 							</li>
 						</ul>
