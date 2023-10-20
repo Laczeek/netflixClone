@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { deleteCookie } from 'cookies-next';
 
-import LoadingSpinner from '../ui/modals/LoadingSpinner';
+import LoadingSpinner from '../ui/loading/LoadingSpinner';
 import { authActions } from '@/store/auth-slice';
 import { AppDispatch, RootState } from '@/store/store';
 
@@ -27,7 +27,7 @@ const AvatarDropdown = () => {
 	const logoutHandler = () => {
 		deleteCookie('jwt');
 		dispatch(authActions.changeAuthStatus({ loading: false, data: null, error: null }));
-		router.replace('/auth');
+		return router.push('/auth');
 	};
 
 	useEffect(() => {
@@ -46,7 +46,7 @@ const AvatarDropdown = () => {
 		<div className='relative text-left ' ref={dropdownRef}>
 			<button onClick={() => setShowDropdown(prevState => !prevState)} className='flex'>
 				<Image
-					src={`/assets/images/avatars/${authStatus.data?.avatarName}.png`}
+					src={`/assets/images/avatars/${authStatus.data.avatarName}`}
 					alt='default user avatar'
 					width={35}
 					height={35}
@@ -59,7 +59,10 @@ const AvatarDropdown = () => {
 				 right-0 z-10 bg-netflix-gray-light rounded shadow-2xl `}>
 				<ul className='py-3'>
 					<li className='w-full'>
-						<Link href={'/'} className='block px-6 py-2 hover:bg-gray-hover transition-colors duration-300'>
+						<Link
+							href={'/account'}
+							className='block px-6 py-2 hover:bg-gray-hover transition-colors duration-300'
+							onClick={() => setShowDropdown(false)}>
 							Account
 						</Link>
 					</li>

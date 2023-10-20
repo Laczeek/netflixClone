@@ -5,12 +5,21 @@ interface User {
 	email: string;
 	username: string;
 	avatarName: string;
+	queue: string[]
+}
+
+export interface ErrorType {
+	email?: string;
+	password?: string;
+	username?: string;
+	password2?: string;
+	message?: string;
 }
 
 interface AuthStatusType {
 	loading: boolean;
-	data: null | User;
-	error: null | { email?: string; password?: string; username?: string; password2?: string, message?:string };
+	data?: null | User;
+	error: null | ErrorType;
 }
 
 export const authSlice = createSlice({
@@ -24,7 +33,15 @@ export const authSlice = createSlice({
 	},
 	reducers: {
 		changeAuthStatus(state, action: PayloadAction<AuthStatusType>) {
-			state.authStatus = action.payload;
+			if ('data' in action.payload) {
+				state.authStatus = action.payload;
+			} else {
+				state.authStatus = {
+					data: state.authStatus.data,
+					error: action.payload.error,
+					loading: action.payload.loading,
+				};
+			}
 		},
 	},
 });

@@ -5,9 +5,9 @@ export default function Document() {
 		<Html lang='en'>
 			<Head />
 			<body className='bg-netflix-gray'>
+				<div id='modals'></div>
 				<Main />
 				<NextScript />
-				<div id='modals'></div>
 			</body>
 		</Html>
 	);

@@ -6,6 +6,7 @@ import { authActions } from '@/store/auth-slice';
 import Footer from './Footer';
 import Navigation from './Navigation';
 
+
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	const dispatch: AppDispatch = useDispatch();
 
@@ -14,20 +15,22 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 			dispatch(authActions.changeAuthStatus({ loading: true, data: null, error: null }));
 			try {
 				const response = await fetch('/api/auth/me');
-	
 				const data = await response.json();
-				console.log(data);
+
 				if (!response.ok) {
-					throw data;
+					throw data.error;
 				}
+
 				dispatch(authActions.changeAuthStatus({ loading: false, data: data.user, error: null }));
 			} catch (error: any) {
-				console.log(error);
-				dispatch(authActions.changeAuthStatus({ loading: false, data: null, error: error }));
+				console.log(error.message);
+				dispatch(authActions.changeAuthStatus({ loading: false, data: null, error: null }));
 			}
 		};
 		fetchUser();
 	}, []);
+
+
 
 	return (
 		<>

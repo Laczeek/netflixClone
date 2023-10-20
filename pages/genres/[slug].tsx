@@ -10,7 +10,7 @@ interface IParams extends ParsedUrlQuery {
 const GenresPage = ({ productions, genre }: { productions: Production[]; genre: string }) => {
 	return (
 		<section className='pt-[72px]'>
-			<h1 className='text-center capitalize text-xl my-10 font-bold'>
+			<h1 className='text-center capitalize text-xl mb-10 font-bold'>
 				<span className='text-netflix-red'>{genre}</span> productions
 			</h1>
 			<ProductionCardsGrid productions={productions} />

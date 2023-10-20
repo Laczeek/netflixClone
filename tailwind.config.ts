@@ -17,7 +17,7 @@ const config: Config = {
 				lg: '2.4rem',
 				xl: '3.2rem',
 				'2xl': '4.2rem',
-				'4xl': '5.2rem'
+				'4xl': '5.2rem',
 			},
 			colors: {
 				'netflix-red': '#db0000',

@@ -52,8 +52,9 @@ model User {
   email String @unique
   username String @unique
   password String
-  avatar_name String @default("avatar1")
-  queue String[] @default([])
+  avatar_name String @default("avatar1.png")
+  queue String[] @default([]) 
+ 
   comments Comment[]
 }
 

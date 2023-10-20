@@ -5,7 +5,6 @@ import { setCookie } from 'cookies-next';
 
 import { hashPassword } from '@/helpers/auth-helpers';
 
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== 'POST') {
 		return res.status(405).json({ error: { message: 'Method not allowed.' } });
@@ -64,11 +63,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			.setExpirationTime('12h')
 			.sign(secret);
 
-
-		setCookie('jwt', jwt, {req, res, maxAge: 12 * 60 * 60 * 1000})
+		setCookie('jwt', jwt, { req, res, maxAge: 12 * 60 * 60 * 1000 });
 
 		return res.json({
-			user: { id: user.id, email: user.email, username: user.username, avatarName: user.avatar_name },
+			user: {
+				id: user.id,
+				email: user.email,
+				username: user.username,
+				avatarName: user.avatar_name,
+				queue: user.queue,
+			},
 		});
 	} catch (error) {
 		console.log(error);

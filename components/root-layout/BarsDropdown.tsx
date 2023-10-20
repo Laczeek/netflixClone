@@ -43,7 +43,7 @@ const BarsDropdown = () => {
 					</li>
 					<li className='w-full hover:bg-gray-hover transition-colors duration-300'>
 						<Link href={'/series'} className='block px-8 py-2 ' onClick={closeBarsDropdown}>
-							Serials
+							Series
 						</Link>
 					</li>
 					<li className='w-full hover:bg-gray-hover transition-colors duration-300'>

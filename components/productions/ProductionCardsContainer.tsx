@@ -41,7 +41,7 @@ const ProductionCardsContainer = ({
 	};
 
 	return (
-		<div className='relative   mb-10 '>
+		<div className='relative  mb-10 '>
 			<h2 className='text-xl font-bold mb-2 capitalize'>
 				{<span className='text-netflix-red'>{genre.toLocaleLowerCase()} </span>}
 				{`${type.toLocaleLowerCase()}s`}
@@ -52,7 +52,9 @@ const ProductionCardsContainer = ({
 				draggable={true}
 				infinite={true}
 				ssr={true}
-				partialVisible={false}>
+				partialVisible={false}
+				
+				>
 				{productions.map(production => (
 					<ProductionCard key={production.id} production={production} />
 				))}

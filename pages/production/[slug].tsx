@@ -10,8 +10,8 @@ interface IParams extends ParsedUrlQuery {
 
 const MovieDetailsPage = ({ production }: { production: Production }) => {
 	return (
-		<section className=' min-h-screen px-4  container mx-auto flex items-center'>
-			<ProductionDetails production={production}/>
+		<section className='pt-[72px] px-4  container mx-auto '>
+			<ProductionDetails production={production} />
 		</section>
 	);
 };

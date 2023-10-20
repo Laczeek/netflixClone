@@ -1,7 +1,7 @@
+import { getCookies } from 'cookies-next';
 import { NextApiRequest, NextApiResponse } from 'next';
 import * as jose from 'jose';
 import { PrismaClient } from '@prisma/client';
-import { getCookies } from 'cookies-next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== 'GET') {
@@ -18,19 +18,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	try {
 		const jwtData = jose.decodeJwt(jwt) as { email: string };
-		const user = await prisma.user.findUnique({ where: { email: jwtData.email } });
-		if (!user) {
-			return res.status(401).json({ error: { message: 'Unautorized request' } });
+
+		const user = await prisma.user.findUnique({ where: { email: jwtData.email }, select: { queue: true } });
+		if (!user || !user.queue) {
+			return res.json({ productions: [] });
 		}
-		return res.json({
-			user: { id: user.id, username: user.username, email: user.email, avatarName: user.avatar_name, queue: user.queue },
-		});
+		const productions = await prisma.production.findMany({ where: { id: { in: user.queue } } });
+		if (!productions) {
+			return res.json({ productions: [] });
+		}
+
+		return res.json({ productions });
 	} catch (error) {
-		return res.status(500).json({ error: { message: 'Something went wrong when tring to find user.' } });
+		console.log(error);
+		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });
+	} finally {
+		await prisma.$disconnect();
 	}
-    finally {
-        await prisma.$disconnect();
-    }
 };
 
 export default handler;
