@@ -18,7 +18,6 @@ slug String @unique
 image String
 youtubeURL String
 created_by String
-rating Int[]
 year_of_publication String
 length String
 allowed_age String
@@ -62,11 +61,13 @@ model User {
 model Comment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   text String
+  rating Int
   production_id String @db.ObjectId
   production Production @relation(fields: [production_id], references: [id])
   author_id String @db.ObjectId
   author User @relation(fields: [author_id], references: [id])
 }
+
 
 
 enum TypeName {

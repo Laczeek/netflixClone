@@ -1,16 +1,16 @@
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 import Image from 'next/image';
-import { Production } from '@prisma/client';
-import { ChatBubbleBottomCenterTextIcon, StarIcon } from '@heroicons/react/24/solid';
+import { StarIcon } from '@heroicons/react/24/solid';
 
+import { ProductionWithComments } from '@/models/models';
 import useModal from '@/hooks/useModal';
 import PlayerModal from '../ui/modals/PlayerModal';
 import PlayerButton from '../ui/buttons/PlayerButton';
 import AddButton from '../ui/buttons/AddButton';
 import useChangeUser from '@/hooks/useChangeUser';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 
-const MovieDetails = ({ production }: { production: Production }) => {
+const MovieDetails = ({ production }: { production: ProductionWithComments }) => {
 	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
 	const { isModal, showModal, closeModal } = useModal();
 	const { changeQueue } = useChangeUser();
@@ -22,13 +22,13 @@ const MovieDetails = ({ production }: { production: Production }) => {
 	};
 
 	let rating;
-	if (production.rating.length === 0) {
-		rating = 'Unrated';
+
+	if (production.comments.length === 0) {
+		rating = 'unrated';
 	} else {
-		rating = (
-			production.rating.reduce((accumulator: number, currentRating: number) => accumulator + currentRating) /
-			production.rating.length
-		).toFixed(1);
+		rating =
+			production.comments.reduce((accumulator: number, currentComment) => accumulator + currentComment.rating, 0) /
+			production.comments.length;
 	}
 
 	return (
@@ -72,16 +72,7 @@ const MovieDetails = ({ production }: { production: Production }) => {
 				</div>
 			</div>
 
-			<p className='w-fit mx-auto tracking-wide my-10 md:w-[50%] text-center'>{production.description}</p>
-
-			<div>
-				<div>
-					<ChatBubbleBottomCenterTextIcon className='w-20 h-20 mx-auto' />
-				</div>
-				<button className='block mt-4 bg-white text-black rounded-lg py-2 px-4 mx-auto hover:bg-black hover:text-white transition-colors duration-300'>
-					Add Comment
-				</button>
-			</div>
+			<p className='w-fit mx-auto tracking-wide my-10 md:w-[60%] text-center'>{production.description}</p>
 		</div>
 	);
 };

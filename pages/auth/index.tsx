@@ -17,6 +17,8 @@ export interface InputsType {
 const AuthPage = () => {
 	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
 
+	console.log(authStatus);
+
 	const [isSignIn, setIsSignIn] = useState(true);
 
 	const [inputs, setInputs] = useState({
@@ -71,7 +73,7 @@ const AuthPage = () => {
 					isBtnDisabled={isBtnDisabled}
 					handleSubmit={handleSubmit}
 					error={authStatus.error}
-					isLoading = {authStatus.data && true || authStatus.loading}
+					isLoading = {authStatus.data && true|| authStatus.loading}
 				/>
 				<p className='my-20 text-red-600 text-center '>{authStatus.error?.message}</p>
 				<div className=' text-gray-400 '>

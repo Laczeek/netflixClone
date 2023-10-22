@@ -4,42 +4,48 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import * as jose from 'jose';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-	if (req.method !== 'PUT') {
+	if (req.method !== 'POST') {
 		return res.status(405).json({ error: { message: 'Method not allowed.' } });
 	}
+
 	const { jwt } = getCookies({ req, res });
 
 	if (!jwt) {
 		return res.status(401).json({ error: { message: 'Unautorized request' } });
 	}
 
-	const { newAvatarName } = req.body;
+	const { text, ratingValue, productionId } = req.body;
 
-	if (!newAvatarName) {
-		return res.status(422).json({ error: { message: 'New avatar name not provided.' } });
+	if (!text || !ratingValue || text.trim().length < 5 || ratingValue < 0 || ratingValue > 5 || !productionId) {
+		return res.status(422).json({ error: { message: 'Not all the data for the comment was given.' } });
 	}
 
 	const prisma = new PrismaClient();
 
 	try {
 		const jwtData = jose.decodeJwt(jwt) as { email: string };
-		const user = await prisma.user.update({ where: { email: jwtData.email }, data: { avatar_name: newAvatarName } });
-
+		const user = await prisma.user.findUnique({ where: { email: jwtData.email }, include: { comments: true } });
 
 		if (!user) {
 			return res.status(401).json({ error: { message: 'Unautorized request' } });
 		}
 
-		return res.json({
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				avatarName: user.avatar_name,
-				queue: user.queue,
+		if (user.comments.find(comment => comment.production_id === productionId)) {
+			return res.status(400).json({ error: { message: 'You have already added a comment for this production.' } });
+		}
+
+		await prisma.comment.create({
+			data: {
+				rating: ratingValue,
+				text,
+				production_id: productionId,
+				author_id: user.id,
 			},
 		});
-	} catch (error) {
+
+		return res.json({ message: 'Comment created successfully.' });
+	} catch (error: any) {
+		console.log(error);
 		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });
 	} finally {
 		await prisma.$disconnect();

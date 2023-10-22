@@ -5,7 +5,7 @@ export const middleware = async (req: NextRequest) => {
 	const { pathname } = req.nextUrl;
 	const jwt = req.cookies.get('jwt')?.value;
 
-	if (pathname.startsWith('/api/user') || pathname === '/api/seed') {
+	if (pathname.startsWith('/api/user') || pathname.startsWith('/api/production')) {
 		if (!jwt) {
 			return NextResponse.json({ error: { message: 'Unauthorized request.' } }, { status: 401 });
 		}

@@ -4,42 +4,42 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import * as jose from 'jose';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-	if (req.method !== 'PUT') {
+	if (req.method !== 'POST') {
 		return res.status(405).json({ error: { message: 'Method not allowed.' } });
 	}
+
 	const { jwt } = getCookies({ req, res });
 
 	if (!jwt) {
 		return res.status(401).json({ error: { message: 'Unautorized request' } });
 	}
 
-	const { newAvatarName } = req.body;
+	const { commentId } = req.body;
 
-	if (!newAvatarName) {
-		return res.status(422).json({ error: { message: 'New avatar name not provided.' } });
+	if (!commentId) {
+		return res.status(422).json({ error: { message: 'Comment id not provided.' } });
 	}
 
 	const prisma = new PrismaClient();
 
 	try {
 		const jwtData = jose.decodeJwt(jwt) as { email: string };
-		const user = await prisma.user.update({ where: { email: jwtData.email }, data: { avatar_name: newAvatarName } });
 
+		const user = await prisma.user.findUnique({ where: { email: jwtData.email }, select: { comments: true } });
 
 		if (!user) {
 			return res.status(401).json({ error: { message: 'Unautorized request' } });
 		}
 
-		return res.json({
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				avatarName: user.avatar_name,
-				queue: user.queue,
-			},
-		});
-	} catch (error) {
+		if (!user.comments.find(comment => comment.id === commentId)) {
+			return res.status(401).json({ error: { message: 'Unautorized request' } });
+		}
+
+		await prisma.comment.delete({ where: { id: commentId } });
+
+		return res.json({ message: 'Comment deleted successfully.' });
+	} catch (error: any) {
+		console.log(error);
 		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });
 	} finally {
 		await prisma.$disconnect();
