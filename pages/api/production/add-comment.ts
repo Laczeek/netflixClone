@@ -34,16 +34,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			return res.status(400).json({ error: { message: 'You have already added a comment for this production.' } });
 		}
 
-		await prisma.comment.create({
+		const newComment = await prisma.comment.create({
 			data: {
 				rating: ratingValue,
 				text,
 				production_id: productionId,
 				author_id: user.id,
 			},
+			include: { author: { select: { id: true, username: true, avatar_name: true } } },
 		});
 
-		return res.json({ message: 'Comment created successfully.' });
+		console.log(newComment);
+
+		return res.json({ newComment });
 	} catch (error: any) {
 		console.log(error);
 		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });

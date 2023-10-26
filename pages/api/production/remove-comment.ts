@@ -37,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		await prisma.comment.delete({ where: { id: commentId } });
 
-		return res.json({ message: 'Comment deleted successfully.' });
+		return res.json({ commentId });
 	} catch (error: any) {
 		console.log(error);
 		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });

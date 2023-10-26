@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { authActions } from '@/store/auth-slice';
 import { AppDispatch } from '@/store/store';
+import { queueActions } from '@/store/queue-slice';
 
 const useChangeUser = () => {
 	const dispatch: AppDispatch = useDispatch();
@@ -85,11 +86,8 @@ const useChangeUser = () => {
 	};
 
 	const changeQueue = async (productionId: string) => {
-		dispatch(authActions.changeAuthStatus({ loading: true, error: null }));
 		if (!productionId) {
-			return dispatch(
-				authActions.changeAuthStatus({ loading: false, error: { message: 'Production id not provided.' } })
-			);
+			return;
 		}
 
 		try {
@@ -110,10 +108,13 @@ const useChangeUser = () => {
 			if (!response.ok) {
 				throw data.error;
 			}
-			dispatch(authActions.changeAuthStatus({ loading: false, data: data.user, error: null }));
+			if (data.production) {
+				dispatch(queueActions.addToQueue(data.production));
+			} else {
+				dispatch(queueActions.removeFromQueue(data.productionId));
+			}
 		} catch (error: any) {
 			console.log(error);
-			dispatch(authActions.changeAuthStatus({ loading: false, error: null }));
 			window.alert(error.message);
 		}
 	};

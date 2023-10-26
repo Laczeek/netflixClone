@@ -23,8 +23,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const prisma = new PrismaClient();
 
 	try {
-		const isProductionExists = await prisma.production.findUnique({ where: { id: productionId } });
-		if (!isProductionExists) {
+		const newProduction = await prisma.production.findUnique({ where: { id: productionId } });
+		if (!newProduction) {
 			return res.status(400).json({ error: { message: 'Can not find production with provided id.' } });
 		}
 		const jwtData = jose.decodeJwt(jwt) as { email: string };
@@ -35,34 +35,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			return res.status(401).json({ error: { message: 'Unautorized request' } });
 		}
 
-		let updatedUser;
-
 		if (user.queue.length === 0 || !user.queue.includes(productionId)) {
-			updatedUser = await prisma.user.update({
+			await prisma.user.update({
 				where: { email: jwtData.email },
 				data: { queue: { push: productionId } },
 			});
+			return res.json({ production: newProduction });
 		} else {
 			const newQueue = user.queue.filter(id => id !== productionId);
-			updatedUser = await prisma.user.update({
+			await prisma.user.update({
 				where: { email: jwtData.email },
 				data: { queue: newQueue },
 			});
+			return res.json({ productionId });
 		}
 
-		if (updatedUser) {
-			return res.json({
-				user: {
-					id: updatedUser.id,
-					email: updatedUser.email,
-					username: updatedUser.username,
-					avatarName: updatedUser.avatar_name,
-					queue: updatedUser.queue,
-				},
-			});
-		}
-
-		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ error: { message: 'Something went wrong on the server.' } });

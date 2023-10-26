@@ -22,15 +22,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		if (!user) {
 			return res.status(401).json({ error: { message: 'Unautorized request' } });
 		}
+
+		const userQueue = await prisma.production.findMany({ where: { id: { in: user.queue } } });
+
 		return res.json({
-			user: { id: user.id, username: user.username, email: user.email, avatarName: user.avatar_name, queue: user.queue },
+			user: { id: user.id, username: user.username, email: user.email, avatarName: user.avatar_name },
+			queue: userQueue,
 		});
 	} catch (error) {
 		return res.status(500).json({ error: { message: 'Something went wrong when tring to find user.' } });
+	} finally {
+		await prisma.$disconnect();
 	}
-    finally {
-        await prisma.$disconnect();
-    }
 };
 
 export default handler;

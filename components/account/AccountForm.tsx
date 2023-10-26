@@ -95,7 +95,7 @@ const AccountForm = ({
 				{isLoading ? (
 					<div className='flex justify-center'>
 						<LoadingSpinner />
-						Submitting...
+						<p className='ml-4'>Submitting...</p>
 					</div>
 				) : (
 					'Save changes'

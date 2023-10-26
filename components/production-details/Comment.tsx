@@ -10,7 +10,15 @@ import { CommentWithAuthor } from '@/models/models';
 import Rating from './Rating';
 import LoadingSpinner from '../ui/loading/LoadingSpinner';
 
-const Comment = ({ comment, userId }: { comment: CommentWithAuthor; userId: string }) => {
+const Comment = ({
+	comment,
+	userId,
+	removeCommentFromState,
+}: {
+	comment: CommentWithAuthor;
+	userId: string;
+	removeCommentFromState: (commentId: string) => void;
+}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const dispatch: AppDispatch = useDispatch();
 	const router = useRouter();
@@ -40,8 +48,7 @@ const Comment = ({ comment, userId }: { comment: CommentWithAuthor; userId: stri
 				throw data.error;
 			}
 
-			window.alert(`${data.message}\nThe site will be refreshed.`);
-			router.reload();
+			removeCommentFromState(comment.id);
 		} catch (error: any) {
 			console.log(error);
 			window.alert(error.message);

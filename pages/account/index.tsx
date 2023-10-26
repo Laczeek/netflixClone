@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import { useSelector } from 'react-redux';
-import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
+import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/24/solid';
 
 import { RootState } from '@/store/store';
@@ -10,17 +10,16 @@ import AccountForm from '@/components/account/AccountForm';
 import useModal from '@/hooks/useModal';
 import AvatarsModal from '@/components/ui/modals/AvatarsModal';
 import LoadingSpinner from '@/components/ui/loading/LoadingSpinner';
-import QueueOfProductions from '@/components/account/QueueOfProductions';
+import QueneOfProductions from '@/components/account/QueueOfProductions';
 
 const AccountPage = ({ avatarsNames }: { avatarsNames: string[] }) => {
 	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
+
 	const [inputsValue, setInputsValue] = useState({
 		nickname: '',
 		password: '',
 		password2: '',
 	});
-
-	console.log(authStatus);
 
 	const { isModal, closeModal, showModal } = useModal();
 
@@ -77,8 +76,7 @@ const AccountPage = ({ avatarsNames }: { avatarsNames: string[] }) => {
 					clearInputsValue={clearInputsValue}
 				/>
 			)}
-
-			{authStatus.data && <QueueOfProductions currentQueue={authStatus.data.queue} />}
+			<QueneOfProductions />
 		</section>
 	);
 };

@@ -1,55 +1,28 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { Production } from '@prisma/client';
-import { QueueListIcon } from '@heroicons/react/24/solid';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 import ProductionCardsGrid from '../productions/ProductionCardsGrid';
+import { QueueListIcon } from '@heroicons/react/24/solid';
 import LoadingSpinner from '../ui/loading/LoadingSpinner';
 
-const QueueOfProductions = ({ currentQueue }: { currentQueue: string[] }) => {
-	const [productions, setProductions] = useState<[] | Production[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const router = useRouter();
 
-	useEffect(() => {
-		setIsLoading(true);
-		const fetchProductions = async () => {
-			try {
-				const response = await fetch('/api/user/queue-productions');
-
-				if (response.status === 401) {
-					return router.push('/auth');
-				}
-				const data = await response.json();
-
-				if (!response.ok) {
-					throw data.error;
-				}
-
-				setProductions(data.productions);
-			} catch (error: any) {
-				console.log(error.message);
-			}
-			setIsLoading(false);
-		};
-		fetchProductions();
-	}, [currentQueue]);
+const QueueOfProductions = () => {
+	const userQueue = useSelector((state:RootState) => state.queue);
 
 	return (
-		<div className='mt-10'>
-			<div className='flex justify-center items-center gap-x-2 mb-4'>
+		<div>
+			<div className='flex justify-center items-center gap-x-2 mt-8 mb-2'>
 				<QueueListIcon className='w-14 h-14' />
 				<h2 className='text-xl'>Queue</h2>
 			</div>
-
-			{isLoading && (
-				<div className='flex justify-center'>
+			{userQueue.queue.length === 0 && !userQueue.isLoading && (
+				<p className='text-center'>No productions added to your queue yet.</p>
+			)}
+			{userQueue.queue.length >= 0 && !userQueue.isLoading && <ProductionCardsGrid productions={userQueue.queue} />}
+			{userQueue.isLoading && (
+				<div className='flex justify-center mt-10'>
 					<LoadingSpinner />
 				</div>
-			)}
-			{currentQueue.length !== 0 && !isLoading && <ProductionCardsGrid productions={productions} />}
-			{currentQueue.length === 0 && !isLoading && (
-				<p className='text-center'>No production has been added to the queue yet.</p>
 			)}
 		</div>
 	);

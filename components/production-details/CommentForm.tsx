@@ -6,8 +6,17 @@ import { AppDispatch } from '@/store/store';
 import { authActions } from '@/store/auth-slice';
 import LoadingSpinner from '../ui/loading/LoadingSpinner';
 import RatingForm from './RatingForm';
+import { CommentWithAuthor } from '@/models/models';
 
-const CommentForm = ({ productionId, closeCommentForm }: { productionId: string; closeCommentForm: () => void }) => {
+const CommentForm = ({
+	productionId,
+	closeCommentForm,
+	addNewCommentToState,
+}: {
+	productionId: string;
+	closeCommentForm: () => void;
+	addNewCommentToState: (newComment: CommentWithAuthor) => void;
+}) => {
 	const [textValue, setTextValue] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [ratingValue, setRatingValue] = useState<number | null>(null);
@@ -51,13 +60,14 @@ const CommentForm = ({ productionId, closeCommentForm }: { productionId: string;
 			}
 			const data = await response.json();
 
+			console.log(data);
+
 			if (!response.ok) {
 				throw data.error;
 			}
 
-			window.alert(`${data.message}\nThe site will be refreshed.`);
+			addNewCommentToState(data.newComment);
 			closeCommentForm();
-			router.reload();
 		} catch (error: any) {
 			console.log(error);
 			window.alert(error.message);
@@ -89,7 +99,7 @@ const CommentForm = ({ productionId, closeCommentForm }: { productionId: string;
 				{isLoading ? (
 					<div className='flex justify-center'>
 						<LoadingSpinner />
-						Submitting...
+						<p className='ml-4'>Submitting...</p>
 					</div>
 				) : (
 					'Submit'

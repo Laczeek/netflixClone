@@ -1,13 +1,13 @@
 import { CommentWithAuthor } from '@/models/models';
 import Comment from './Comment';
 
-const CommentsContainer = ({ comments, userId }: { comments: CommentWithAuthor[], userId:string }) => {
-	const reverseComments = comments.reverse();
+const CommentsContainer = ({ comments, userId, removeCommentFromState }: { comments: CommentWithAuthor[]; userId: string, removeCommentFromState : (commentId: string) => void }) => {
+	const reversedComments = [...comments].reverse();
 
 	return (
 		<ul>
-			{reverseComments.map(comment => (
-				<Comment comment={comment} key={comment.id} userId = {userId}/>
+			{reversedComments.map(comment => (
+				<Comment comment={comment} key={comment.id} userId={userId} removeCommentFromState = {removeCommentFromState}/>
 			))}
 		</ul>
 	);

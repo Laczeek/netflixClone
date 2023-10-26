@@ -16,7 +16,7 @@ export interface ErrorType {
 	message?: string;
 }
 
-interface AuthStatusType {
+export interface AuthStatusType {
 	loading: boolean;
 	data?: null | User;
 	error: null | ErrorType;

@@ -1,34 +1,45 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 import Image from 'next/image';
+import { Production } from '@prisma/client';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 
-import { ProductionWithComments } from '@/models/models';
+import { CommentWithAuthor, ProductionWithComments } from '@/models/models';
 import useModal from '@/hooks/useModal';
 import PlayerModal from '../ui/modals/PlayerModal';
 import PlayerButton from '../ui/buttons/PlayerButton';
 import AddButton from '../ui/buttons/AddButton';
 import useChangeUser from '@/hooks/useChangeUser';
+import LoadingSpinner from '../ui/loading/LoadingSpinner';
 
-const MovieDetails = ({ production }: { production: ProductionWithComments }) => {
-	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
+const MovieDetails = ({
+	production,
+	updatedComments,
+	userQueue,
+}: {
+	production: ProductionWithComments;
+	updatedComments: CommentWithAuthor[];
+	userQueue: { queue: [] | Production[]; isLoading: boolean };
+}) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const { isModal, showModal, closeModal } = useModal();
 	const { changeQueue } = useChangeUser();
 
-	const isThisProductionInUserQueue = authStatus.data?.queue.find(productionId => productionId === production.id);
+	const isThisProductionInUserQueue = userQueue.queue.find(queueProduction => queueProduction.id === production.id);
 
 	const addProductionToQueueHandler = async () => {
+		setIsLoading(true);
 		await changeQueue(production.id);
+		setIsLoading(false);
 	};
 
 	let rating;
 
-	if (production.comments.length === 0) {
+	if (updatedComments.length === 0) {
 		rating = 'unrated';
 	} else {
 		rating =
-			production.comments.reduce((accumulator: number, currentComment) => accumulator + currentComment.rating, 0) /
-			production.comments.length;
+			updatedComments.reduce((accumulator: number, currentComment) => accumulator + currentComment.rating, 0) /
+			updatedComments.length;
 	}
 
 	return (
@@ -63,12 +74,19 @@ const MovieDetails = ({ production }: { production: ProductionWithComments }) =>
 							Created by: <span className='text-gray-500'>{production.created_by}</span>
 						</p>
 					</div>
-					<div className='flex gap-x-4'>
-						<PlayerButton showModal={showModal} />
-						{!isThisProductionInUserQueue && !authStatus.loading && (
-							<AddButton addProductionToQueueHandler={addProductionToQueueHandler} />
-						)}
-					</div>
+					{!userQueue.isLoading && (
+						<div className='flex gap-x-4 items-center'>
+							<PlayerButton showModal={showModal} />
+							{!isLoading && !isThisProductionInUserQueue && (
+								<AddButton addProductionToQueueHandler={addProductionToQueueHandler} />
+							)}
+							{isLoading && (
+								<div className='p-3 bg-white rounded-full'>
+									<LoadingSpinner />
+								</div>
+							)}
+						</div>
+					)}
 				</div>
 			</div>
 

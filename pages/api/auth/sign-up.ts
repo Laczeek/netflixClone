@@ -65,15 +65,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		setCookie('jwt', jwt, { req, res, maxAge: 12 * 60 * 60 * 1000 });
 
-		return res.json({
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				avatarName: user.avatar_name,
-				queue: user.queue,
-			},
-		});
+		return res.json({ message: 'Siggned Up' });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ error: { message: 'Something went wrong on the server.' } });

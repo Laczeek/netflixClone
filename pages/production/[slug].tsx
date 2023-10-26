@@ -6,7 +6,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/solid';
 
 import { RootState } from '@/store/store';
-import { ProductionWithComments } from '@/models/models';
+import { CommentWithAuthor, ProductionWithComments } from '@/models/models';
 import ProductionDetails from '@/components/production-details/ProductionDetails';
 import CommentForm from '@/components/production-details/CommentForm';
 import CommentsContainer from '@/components/production-details/CommentsContainer';
@@ -17,18 +17,29 @@ interface IParams extends ParsedUrlQuery {
 
 const MovieDetailsPage = ({ production }: { production: ProductionWithComments }) => {
 	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
+	const userQueue = useSelector((state:RootState) => state.queue);
+	const [updatedComments, setUpdatedComments] = useState(production.comments);
 	const [isCommentFormShow, setIsCommentFormShow] = useState(false);
 
 	const isUserCommentInComments =
-		authStatus.data && production.comments.find(comment => comment.author_id === authStatus.data?.id);
+		authStatus.data && updatedComments.find(comment => comment.author_id === authStatus.data?.id);
 
 	const closeCommentForm = () => {
 		setIsCommentFormShow(false);
 	};
 
+	const addNewCommentToState = (newComment: CommentWithAuthor) => {
+		setUpdatedComments(prevState => [...prevState, newComment]);
+	};
+
+	const removeCommentFromState = (commentId: string) => {
+		const newArray = updatedComments.filter(comment => comment.id !== commentId);
+		setUpdatedComments(newArray);
+	};
+
 	return (
 		<section className='pt-[72px] px-4  container mx-auto '>
-			<ProductionDetails production={production} />
+			<ProductionDetails production={production} userQueue={userQueue} updatedComments={updatedComments} />
 
 			{!isUserCommentInComments && !authStatus.loading && (
 				<button
@@ -38,14 +49,24 @@ const MovieDetailsPage = ({ production }: { production: ProductionWithComments }
 				</button>
 			)}
 
-			{isCommentFormShow && <CommentForm productionId={production.id} closeCommentForm={closeCommentForm} />}
+			{isCommentFormShow && (
+				<CommentForm
+					productionId={production.id}
+					closeCommentForm={closeCommentForm}
+					addNewCommentToState={addNewCommentToState}
+				/>
+			)}
 
-			{authStatus.data && production.comments.length > 0 && (
+			{authStatus.data && updatedComments.length > 0 && (
 				<ChatBubbleBottomCenterTextIcon className='w-20 h-20 mx-auto mb-6' />
 			)}
 
-			{authStatus.data && production.comments.length > 0 && (
-				<CommentsContainer comments={production.comments} userId={authStatus.data.id} />
+			{authStatus.data && updatedComments.length > 0 && (
+				<CommentsContainer
+					comments={updatedComments}
+					userId={authStatus.data.id}
+					removeCommentFromState={removeCommentFromState}
+				/>
 			)}
 		</section>
 	);
@@ -77,7 +98,7 @@ export const getStaticProps: GetStaticProps = async context => {
 	try {
 		const production = await prisma.production.findUnique({
 			where: { slug },
-			include: { comments: { include: { author: true } } },
+			include: { comments: { include: { author: { select: { id: true, username: true, avatar_name: true } } } } },
 		});
 
 		if (!production) {

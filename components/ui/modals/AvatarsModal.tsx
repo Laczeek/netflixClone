@@ -73,7 +73,7 @@ const AvatarsModal = ({
 						{isLoading ? (
 							<div className='flex justify-center'>
 								<LoadingSpinner />
-								Submitting...
+								<p className='ml-4'>Submitting...</p>
 							</div>
 						) : (
 							'Are you sure?'
