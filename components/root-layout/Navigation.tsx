@@ -53,7 +53,7 @@ const Navigation = () => {
 								</Link>
 							</li>
 							<li
-								className={`w-full hover:text-gray-300 transition-colors duration-300 ${
+								className={`w-full hover:text-gray-300 transition-colors duration-300  ${
 									router.pathname.startsWith('/genres') && 'text-gray-400'
 								}`}>
 								<GenreDropdown />

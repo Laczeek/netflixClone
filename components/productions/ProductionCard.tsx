@@ -46,7 +46,7 @@ const ProductionCard = ({ production }: { production: Production }) => {
 	};
 
 	return (
-		<div className='max-w-[280px] px-1'>
+		<div className=' max-w-[280px] px-1'>
 			{isModal && <PlayerModal youtubeURL={production.youtubeURL} closeModal={closeModal} title={production.title} />}
 			<Link href={`/production/${production.slug}`}>
 				<div className='relative opacity-70 group  p-2 border-2 border-transparent hover:opacity-100 hover:border-netflix-red transition-all duration-300'>
@@ -55,7 +55,7 @@ const ProductionCard = ({ production }: { production: Production }) => {
 						width={350}
 						height={450}
 						alt={`${production.title} poster`}
-						className='w-full h-[250px] sm:h-[300px] md:h-[340px]  object-cover'
+						className='w-full h-[290px] sm:h-[300px] md:h-[340px]  object-cover'
 					/>
 
 					{!userQueue.isLoading && (

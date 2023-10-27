@@ -36,7 +36,7 @@ const SearchPage = () => {
 
 		const timeout = setTimeout(() => {
 			const result = productions.filter(production => {
-				if (production.genre_name.toLowerCase() === query) {
+				if (production.genre_name.toLowerCase() === query.toLowerCase()) {
 					return production;
 				}
 				return production.title.toLowerCase().includes(query.toLowerCase());
@@ -49,7 +49,7 @@ const SearchPage = () => {
 	}, [query]);
 
 	return (
-		<section className=' pt-[72px] container mx-auto'>
+		<section className=' pt-[72px] container mx-auto px-2'>
 			<Head>
 				<title>NetflixClone | Search</title>
 			</Head>

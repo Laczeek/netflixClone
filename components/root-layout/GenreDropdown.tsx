@@ -30,7 +30,7 @@ const GenreDropdown = ({ closeBarsDropdown }: { closeBarsDropdown?: () => void }
 	}, []);
 
 	return (
-		<div className='relative px-6 py-2' ref={dropdownRef}>
+		<div className='relative px-8 py-2' ref={dropdownRef}>
 			<button onClick={() => setShowDropdown(prevState => !prevState)}>Genres</button>
 
 			<div
