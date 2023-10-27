@@ -13,7 +13,7 @@ const GenresPage = ({ productions, genre }: { productions: Production[]; genre: 
 	return (
 		<section className='pt-[72px]'>
 			<Head>
-				<title>NetflixClone | {genre.charAt(0).toUpperCase() + genre.slice(1)} </title>
+				<title>{`NetflixClone | ${genre.charAt(0).toUpperCase() + genre.slice(1)}`}</title>
 			</Head>
 			<h1 className='text-center capitalize text-xl mb-10 font-bold'>
 				<span className='text-netflix-red'>{genre}</span> productions

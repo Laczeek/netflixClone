@@ -3,7 +3,7 @@ import { Production } from '@prisma/client';
 import { StarIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
-import { CommentWithAuthor, ProductionWithComments } from '@/models/models';
+import { CommentWithAuthor} from '@/models/models';
 import useModal from '@/hooks/useModal';
 import PlayerModal from '../ui/modals/PlayerModal';
 import PlayerButton from '../ui/buttons/PlayerButton';
@@ -16,8 +16,8 @@ const MovieDetails = ({
 	updatedComments,
 	userQueue,
 }: {
-	production: ProductionWithComments;
-	updatedComments: CommentWithAuthor[];
+	production: Production;
+	updatedComments: CommentWithAuthor[] | [];
 	userQueue: { queue: [] | Production[]; isLoading: boolean };
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const MovieDetails = ({
 	}
 
 	return (
-		<div className='flex flex-col w-full'>
+		<div className='flex flex-col w-full '>
 			{isModal && <PlayerModal title={production.title} youtubeURL={production.youtubeURL} closeModal={closeModal} />}
 			<div className='flex gap-x-6 md:gap-x-14  justify-center items-center'>
 				<div className='w-[40%] sm:w-auto'>
@@ -55,9 +55,9 @@ const MovieDetails = ({
 						className='object-contain w-full max-h-[500px]'
 					/>
 				</div>
-				<div className='w-fit'>
-					<div className='flex items-center gap-x-6'>
-						<h1 className='font-bold text-lg sm:text-xl md:text-2xl border-b-2 border-netflix-red mb-4'>
+				<div className=' max-w-[40%]'>
+					<div className='flex items-center gap-x-6 '>
+						<h1 className='font-bold text-lg sm:text-xl md:text-2xl border-b-2 border-netflix-red mb-4 break-all '>
 							{production.title}
 						</h1>
 						<p className='text-sm  text-gray-300 w-fit  bg-gray-700 p-2 rounded'>{production.allowed_age}</p>
