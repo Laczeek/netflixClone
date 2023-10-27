@@ -9,13 +9,13 @@
 ## Built with
 * NextJs
 * Typescript
-* redux toolkit
-* tailwind css
-* prisma + mongodb
-* react-player
-* hero icons
-* react multi carousel
-* bcrypt / cookies-next / jose
+* Redux toolkit
+* Tailwind css
+* Prisma + mongodb
+* React-player
+* Hero icons
+* React multi carousel
+* Bcrypt / cookies-next / jose
 
 ## Features
 * Authorization
