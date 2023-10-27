@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PrismaClient } from '@prisma/client';
@@ -39,6 +40,9 @@ const MovieDetailsPage = ({ production }: { production: ProductionWithComments }
 
 	return (
 		<section className='pt-[72px] px-4  container mx-auto '>
+			<Head>
+				<title>NetflixClone | {production.title}</title>
+			</Head>
 			<ProductionDetails production={production} userQueue={userQueue} updatedComments={updatedComments} />
 
 			{!isUserCommentInComments && !authStatus.loading && (

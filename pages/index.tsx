@@ -54,7 +54,6 @@ export const getStaticProps = async () => {
 
 		return {
 			props: { allGenres: filteredGenres, newProductionForVideoBanner },
-			revalidate: 86400,
 		};
 	} catch (error: any) {
 		console.log(error);

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+
 	images: {
 		remotePatterns: [
 			{
@@ -20,12 +21,10 @@ const nextConfig = {
 			},
 			{
 				protocol: 'https',
-				hostname: "img.rgstatic.com",
-				port: ''
-			}
+				hostname: 'img.rgstatic.com',
+				port: '',
+			},
 		],
-		
-		
 	},
 };
 

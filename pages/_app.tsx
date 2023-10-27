@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import type { AppProps } from 'next/app';
 import { Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
@@ -20,6 +21,10 @@ export default function App({ Component, pageProps }: AppProps) {
 
 	return (
 		<div className={`${roboto.variable} font-sans  `}>
+			<Head>
+				<title>NetflixClone</title>
+				<meta name='description' content='This site is a Netflix clone. I invite you to check it out.' />
+			</Head>
 			<Provider store={store}>
 				{router.pathname !== '/auth' ? (
 					<RootLayout>

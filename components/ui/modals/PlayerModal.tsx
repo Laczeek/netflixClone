@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import ReactPlayer from 'react-player';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 
+
 const PlayerModal = ({
 	title,
 	youtubeURL,
@@ -33,7 +34,7 @@ const PlayerModal = ({
 						height='100%'
 						width='100%'
 						playing={true}
-						volume={0.3}
+						volume={0.1}
 					/>
 				</div>
 			</div>

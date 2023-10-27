@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
@@ -8,9 +9,9 @@ import AvatarDropdown from './AvatarDropdown';
 import BarsDropdown from './BarsDropdown';
 import GenreDropdown from './GenreDropdown';
 
-
 const Navigation = () => {
 	const [isTop, setIsTop] = useState(true);
+	const router = useRouter();
 
 	const handleScroll = () => {
 		if (window.scrollY === 0) {
@@ -35,17 +36,26 @@ const Navigation = () => {
 							<Image src={netlixLogo} alt='netlix logo' width={90} height={30} />
 						</Link>
 						<ul className='hidden md:flex ml-6'>
-							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
-								<Link href={'/movies'} className='block px-6 py-2 '>
+							<li
+								className={`w-full hover:text-gray-300 transition-colors duration-300 ${
+									router.pathname === '/movies' && 'text-gray-400'
+								}`}>
+								<Link href={'/movies'} className='block px-6 py-2'>
 									Movies
 								</Link>
 							</li>
-							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
+							<li
+								className={`w-full hover:text-gray-300 transition-colors duration-300 ${
+									router.pathname === '/series' && 'text-gray-400'
+								}`}>
 								<Link href={'/series'} className='block px-6 py-2 h'>
 									Series
 								</Link>
 							</li>
-							<li className='w-full hover:text-gray-300 transition-colors duration-300'>
+							<li
+								className={`w-full hover:text-gray-300 transition-colors duration-300 ${
+									router.pathname.startsWith('/genres') && 'text-gray-400'
+								}`}>
 								<GenreDropdown />
 							</li>
 						</ul>
@@ -53,10 +63,11 @@ const Navigation = () => {
 
 					<BarsDropdown />
 
-					<div className='flex  gap-x-4'>
-						<button>
+					<div className='flex  gap-x-6 items-center'>
+						<Link href={'/search'}>
 							<MagnifyingGlassIcon className='w-10 h-10' />
-						</button>
+						</Link>
+
 						<AvatarDropdown />
 					</div>
 				</div>

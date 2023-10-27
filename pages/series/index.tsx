@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { PrismaClient, Production } from '@prisma/client';
 
 import { GenresWithProductions } from '@/models/models';
@@ -13,6 +14,9 @@ const SeriesPage = ({
 }) => {
 	return (
 		<section>
+			<Head>
+				<title>NetflixClone | Series</title>
+			</Head>
 			<VideoBanner production={newSerieForVideoBanner} />
 
 			<div className='mt-10 lg:-mt-40 container mx-auto px-4'>

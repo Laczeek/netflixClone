@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { PrismaClient, Production } from '@prisma/client';
 
 import { GenresWithProductions } from '@/models/models';
@@ -9,6 +10,9 @@ import ProductionsCardsContainer from '@/components/productions/ProductionCardsC
 export default function MoviesPage({allGenres, newMovieForVideoBanner}: {allGenres: GenresWithProductions, newMovieForVideoBanner: Production}) {
 	return (
 		<section>
+			<Head>
+				<title>NetflixClone | Movies</title>
+			</Head>
 			<VideoBanner production={newMovieForVideoBanner} />
 			<div className='mt-10 lg:-mt-40 container mx-auto px-4'>
 				{allGenres.map(genre => <ProductionsCardsContainer key={genre.id} productions={genre.productions} genre={genre.name} type='MOVIE'/>)}

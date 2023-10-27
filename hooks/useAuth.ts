@@ -1,6 +1,7 @@
-import { AppDispatch } from '@/store/store';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+
+import { AppDispatch } from '@/store/store';
 import { InputsType } from '@/pages/auth';
 import { authActions } from '@/store/auth-slice';
 
@@ -43,8 +44,8 @@ const useAuth = () => {
 				throw data.error;
 			}
 			
-				dispatch(authActions.changeAuthStatus({ loading: false, data: data.user, error: null }));
-				router.replace('/')
+			dispatch(authActions.changeAuthStatus({ loading: true ,error: null }));
+			router.replace('/')
 			
 		}
 		catch(error:any) {
@@ -117,7 +118,7 @@ const useAuth = () => {
 				throw data.error;
 			}
 			
-			dispatch(authActions.changeAuthStatus({ loading: false, data: data.user, error: null }));
+			dispatch(authActions.changeAuthStatus({ loading: true, error: null }));
 			router.replace('/')
 		}
 		catch(error:any) {

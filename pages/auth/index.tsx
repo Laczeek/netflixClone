@@ -1,11 +1,12 @@
+import Head from 'next/head';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { RootState } from '@/store/store';
 import { useSelector } from 'react-redux';
 
+import { RootState } from '@/store/store';
+import useAuth from '@/hooks/useAuth';
 import AuthForm from '@/components/auth/AuthForm';
 import netflixBgImage from '/public/assets/images/netflix-wallpaper2.webp';
-import useAuth from '@/hooks/useAuth';
 
 export interface InputsType {
 	email: string;
@@ -16,8 +17,6 @@ export interface InputsType {
 
 const AuthPage = () => {
 	const authStatus = useSelector((state: RootState) => state.auth.authStatus);
-
-	console.log(authStatus);
 
 	const [isSignIn, setIsSignIn] = useState(true);
 
@@ -35,7 +34,7 @@ const AuthPage = () => {
 		isBtnDisabled = true;
 	} else if (!isSignIn && (!inputs.email || !inputs.username || !inputs.password || !inputs.password2)) {
 		isBtnDisabled = true;
-	}  else {
+	} else {
 		isBtnDisabled = false;
 	}
 
@@ -49,7 +48,7 @@ const AuthPage = () => {
 		setInputs(prevInputs => ({ ...prevInputs, [event.target.name]: event.target.value }));
 	};
 
-	const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		if (isSignIn) {
@@ -61,6 +60,9 @@ const AuthPage = () => {
 
 	return (
 		<section className='relative w-screen h-screen flex justify-center items-center'>
+			<Head>
+				<title>NetflixClone | Authorization</title>
+			</Head>
 			<Image src={netflixBgImage} fill={true} alt='background image' className='absolute h-full w-full object-cover' />
 			<div className='absolute w-full h-full bg-black bg-opacity-30'></div>
 
@@ -73,7 +75,7 @@ const AuthPage = () => {
 					isBtnDisabled={isBtnDisabled}
 					handleSubmit={handleSubmit}
 					error={authStatus.error}
-					isLoading = {authStatus.data && true|| authStatus.loading}
+					isLoading={authStatus.loading}
 				/>
 				<p className='my-20 text-red-600 text-center '>{authStatus.error?.message}</p>
 				<div className=' text-gray-400 '>

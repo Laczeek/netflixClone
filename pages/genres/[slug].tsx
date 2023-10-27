@@ -1,7 +1,9 @@
-import ProductionCardsGrid from '@/components/productions/ProductionCardsGrid';
-import { GenreName, PrismaClient, Production } from '@prisma/client';
+import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { GenreName, PrismaClient, Production } from '@prisma/client';
+
+import ProductionCardsGrid from '@/components/productions/ProductionCardsGrid';
 
 interface IParams extends ParsedUrlQuery {
 	slug: string;
@@ -10,6 +12,9 @@ interface IParams extends ParsedUrlQuery {
 const GenresPage = ({ productions, genre }: { productions: Production[]; genre: string }) => {
 	return (
 		<section className='pt-[72px]'>
+			<Head>
+				<title>NetflixClone | {genre.charAt(0).toUpperCase() + genre.slice(1)} </title>
+			</Head>
 			<h1 className='text-center capitalize text-xl mb-10 font-bold'>
 				<span className='text-netflix-red'>{genre}</span> productions
 			</h1>
@@ -56,7 +61,6 @@ export const getStaticProps: GetStaticProps = async context => {
 				productions: genre.productions,
 				genre: slug,
 			},
-			revalidate: 86400,
 		};
 	} catch (error: any) {
 		console.log(error);

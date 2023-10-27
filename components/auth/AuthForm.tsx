@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent } from 'react';
+
 import { InputsType } from '@/pages/auth';
 import LoadingSpinner from '../ui/loading/LoadingSpinner';
 

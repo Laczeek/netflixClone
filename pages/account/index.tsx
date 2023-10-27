@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import path from 'path';
 import fs from 'fs';
 import { useSelector } from 'react-redux';
@@ -37,6 +38,9 @@ const AccountPage = ({ avatarsNames }: { avatarsNames: string[] }) => {
 
 	return (
 		<section className='pt-[72px] container mx-auto px-6 '>
+			<Head>
+				<title>NetflixClone | Account</title>
+			</Head>
 			{isModal && authStatus.data && (
 				<AvatarsModal
 					currentAvatarName={authStatus.data.avatarName}
@@ -97,6 +101,5 @@ export const getStaticProps = async () => {
 		props: {
 			avatarsNames,
 		},
-		revalidate: 86400,
 	};
 };

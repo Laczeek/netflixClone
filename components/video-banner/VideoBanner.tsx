@@ -4,6 +4,7 @@ const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false });
 import Link from 'next/link';
 import { Production } from '@prisma/client';
 import { PlayIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
+
 import useModal from '@/hooks/useModal';
 import PlayerModal from '../ui/modals/PlayerModal';
 
